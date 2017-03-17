@@ -8,10 +8,11 @@ import ping
 
 def dns_query(addr):
     my_resolver = dns.resolver.Resolver()
-    my_resolver.nameservers = addr[0]
-    my_resolver.port = int(addr[1])
+    #my_resolver.nameservers = addr
     answer = my_resolver.query(input('Input your FQDN: '), 'A')
-    print(answer.response.answer)
+    for i in answer.response.answer:
+        for j in i.items:
+            print(j.address)
 
 if __name__ == '__main__':
     dns_list = ping.get_avail_dns()

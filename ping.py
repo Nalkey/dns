@@ -34,7 +34,7 @@ def get_avail_dns():
     avail_dns = set()
     for _ in addr_list:
         # If the dns is ping-able, add the DNS ip into the set
-        if not _ping(_[0]):
+        if not _ping(_):
             avail_dns.add(_)
 
     if not avail_dns:
