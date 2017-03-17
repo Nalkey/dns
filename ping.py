@@ -9,22 +9,39 @@ Author: Yuanhao Wu
 
 import os, subprocess
 
+import dns_server
 
-def ping(addr_list):
+
+def _ping(addr):
     if os.name == 'nt':
         count = '-n'
         # output = '> nul'
     else:
         count = '-c'
         # output = '&> /dev/null'
-    for addr in addr_list:
-        res = subprocess.run(('ping {} 3 {}'.format(count, addr)),
-                             shell=True, stdout=subprocess.DEVNULL)
-        if res.returncode:
-            print('DNS server {} cannot connect...'.format(addr))
-        else:
-            print('DNS server {} OK!'.format(addr))
+    res = subprocess.run(('ping {} 3 {}'.format(count, addr)),
+                         shell=True, stdout=subprocess.DEVNULL)
+    if res.returncode:
+        print('DNS server {} cannot connect...'.format(addr))
+        return -1
+    else:
+        print('DNS server {} OK!'.format(addr))
+        return None
+
+
+def get_avail_dns():
+    addr_list = dns_server.dns_server()
+    avail_dns = set()
+    for _ in addr_list:
+        # If the dns is ping-able, add the DNS ip into the set
+        if not _ping(_[0]):
+            avail_dns.add(_)
+
+    if not avail_dns:
+        print('There is no available DNS server.')
+    else:
+        return avail_dns
+
 
 if __name__ == '__main__':
-    addr_list = ['8.8.8.8', '1.1.1.1']
-    ping(addr_list)
+    get_avail_dns()

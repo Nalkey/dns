@@ -3,12 +3,17 @@
 
 import dns.resolver
 
+import ping
 
-def dns_query(addr_list):
+
+def dns_query(addr):
     my_resolver = dns.resolver.Resolver()
-    my_resolver.nameservers = addr_list
-    answer = my_resolver.query(input('Input your FQDN: '))
-    print(answer.response)
+    my_resolver.nameservers = addr[0]
+    my_resolver.port = int(addr[1])
+    answer = my_resolver.query(input('Input your FQDN: '), 'A')
+    print(answer.response.answer)
 
 if __name__ == '__main__':
-    dns_query(['8.8.8.8'])
+    dns_list = ping.get_avail_dns()
+    for _ in dns_list:
+        dns_query(_)

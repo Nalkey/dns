@@ -12,10 +12,10 @@ import subprocess
 
 def dns_server():
     addr_list = []
-    res = subprocess.run('gsh list_dns_server_address all',
+    res = subprocess.run(['nslookup', 'www.google.com'],
                          stdout=subprocess.PIPE)
-    addr_list = re.findall(r'-ip (\d+\.\d+\.\d+\.\d+)+? ', res)
-    print(addr_list)
+    addr_list = re.findall(r'Address:\s+(\d+\.\d+\.\d+\.\d+)#(\d+)', res.stdout.decode('utf-8'))
+    return addr_list
 
 if __name__ == '__main__':
     dns_server()
